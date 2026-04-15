@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0023)http://10.10.2.63:8081/ -->
 <html lang="es" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -210,6 +209,7 @@ input[type="number"] {
     background: var(--surface-2);
     color: var(--text);
     -webkit-appearance: none;
+    appearance: none;
     transition: border-color .15s, box-shadow .15s;
 }
 input[type="text"]:focus,
@@ -560,6 +560,172 @@ td:hover .task-bar { filter: brightness(1.1); }
     #cardView  { display: none !important; }
     #tableView { display: block !important; }
 }
+
+/* ════════════════════════════════════════════════════════
+   KANBAN STYLES
+════════════════════════════════════════════════════════ */
+.kanban-section {
+    display: none;
+}
+.kanban-section.active {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kanban-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.progress-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.progress-bar {
+    width: 120px;
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 45px;
+}
+
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.kanban-column {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+}
+
+.kanban-column-header {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kanban-count {
+    background: var(--accent);
+    color: var(--accent-fg);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+.kanban-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 300px;
+}
+
+.kanban-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid;
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    cursor: grab;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow);
+}
+
+.kanban-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kanban-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+.kanban-item-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+
+.kanban-item-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+.kanban-item-action {
+    margin-top: 6px;
+    display: flex;
+    gap: 4px;
+}
+
+.kanban-item-delete {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.kanban-item-delete:hover {
+    opacity: 1;
+}
+
+.empty-kanban-state {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+    
     </style>
 </head>
 <body>
@@ -571,10 +737,10 @@ td:hover .task-bar { filter: brightness(1.1); }
         <span class="subtitle" id="weekInfo">Semana 13 de 2026</span>
     </div>
     <div class="theme-switcher" role="group" aria-label="Selector de tema">
-        <button class="theme-btn active" data-theme-val="light" title="Claro" onclick="setTheme(&#39;light&#39;)">☀️</button>
-        <button class="theme-btn" data-theme-val="dark" title="Oscuro" onclick="setTheme(&#39;dark&#39;)">🌙</button>
-        <button class="theme-btn" data-theme-val="sepia" title="Sepia" onclick="setTheme(&#39;sepia&#39;)">📜</button>
-        <button class="theme-btn" data-theme-val="contrast" title="Alto contraste" onclick="setTheme(&#39;contrast&#39;)">⬛</button>
+        <button class="theme-btn active" data-theme-val="light" title="Claro" onclick="setTheme('light')">☀️</button>
+        <button class="theme-btn" data-theme-val="dark" title="Oscuro" onclick="setTheme('dark')">🌙</button>
+        <button class="theme-btn" data-theme-val="sepia" title="Sepia" onclick="setTheme('sepia')">📜</button>
+        <button class="theme-btn" data-theme-val="contrast" title="Alto contraste" onclick="setTheme('contrast')">⬛</button>
     </div>
 </header>
 
@@ -611,11 +777,14 @@ td:hover .task-bar { filter: brightness(1.1); }
 
 <!-- ══ VIEW TOGGLE (mobile only) ══════════════════════ -->
 <div class="view-toggle" id="viewToggle" role="tablist">
-    <button class="view-toggle-btn active" id="btnCards" onclick="switchView(&#39;cards&#39;)" role="tab">
+    <button class="view-toggle-btn active" id="btnCards" onclick="switchView('cards')" role="tab">
         ☰ Tarjetas
     </button>
-    <button class="view-toggle-btn" id="btnTable" onclick="switchView(&#39;table&#39;)" role="tab">
+    <button class="view-toggle-btn" id="btnTable" onclick="switchView('table')" role="tab">
         📊 Gantt
+    </button>
+    <button class="view-toggle-btn" id="btnKanban" onclick="switchView('kanban')" role="tab">
+        📋 Kanban
     </button>
 </div>
 
@@ -735,6 +904,46 @@ td:hover .task-bar { filter: brightness(1.1); }
 <!-- ══ TOASTS ═════════════════════════════════════════ -->
 <div class="toast-wrap" id="toastWrap"></div>
 
+<!-- ══ KANBAN VIEW ════════════════════════════════════════ -->
+<section id="kanbanView" class="kanban-section">
+    <div class="progress-indicator">
+        <span style="font-size: 12px; font-weight: 600;">📈 Progreso:</span>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="progressText">0%</span>
+    </div>
+
+    <div class="kanban-board">
+        <!-- To Do Column -->
+        <div class="kanban-column">
+            <div class="kanban-column-header">
+                📝 Por hacer
+                <span class="kanban-count" id="todoCount">0</span>
+            </div>
+            <div class="kanban-items" id="kanban-todo" data-status="todo"></div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="kanban-column">
+            <div class="kanban-column-header">
+                ⚙️ En progreso
+                <span class="kanban-count" id="inProgressCount">0</span>
+            </div>
+            <div class="kanban-items" id="kanban-in-progress" data-status="in-progress"></div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="kanban-column">
+            <div class="kanban-column-header">
+                ✅ Hecho
+                <span class="kanban-count" id="doneCount">0</span>
+            </div>
+            <div class="kanban-items" id="kanban-done" data-status="done"></div>
+        </div>
+    </div>
+</section>
+
 <!-- ══ ENV CONFIG (override per environment) ════════════ -->
 <script>
   // Equivalent to: os.getenv("SERVICE_URL", "http://localhost:3000")
@@ -780,10 +989,17 @@ function loadTheme() {
 function switchView(view) {
     activeView = view;
     const isCards = view === 'cards';
+    const isTable = view === 'table';
+    const isKanban = view === 'kanban';
     document.getElementById('cardView').style.display  = isCards ? 'flex' : 'none';
-    document.getElementById('tableView').style.display = isCards ? 'none' : 'block';
+    document.getElementById('tableView').style.display = isTable ? 'block' : 'none';
+    document.getElementById('kanbanView').classList.toggle('active', isKanban);
     document.getElementById('btnCards').classList.toggle('active', isCards);
-    document.getElementById('btnTable').classList.toggle('active', !isCards);
+    document.getElementById('btnTable').classList.toggle('active', isTable);
+    document.getElementById('btnKanban').classList.toggle('active', isKanban);
+    if (isKanban) {
+        renderKanban();
+    }
 }
 
 /* ════════════════════════════════════════════════════════
@@ -795,6 +1011,7 @@ async function loadTasks() {
         if(res.ok) {
             tasksList = await res.json();
             renderAll();
+            setupKanbanDropZones();
         } else {
             showToast('⚠️ Error al cargar tareas desde el servidor', 'warn');
         }
@@ -1022,6 +1239,139 @@ function renderGrid() {
 function renderAll() { renderCards(); renderGrid(); }
 
 /* ════════════════════════════════════════════════════════
+   KANBAN RENDERING & LOGIC
+════════════════════════════════════════════════════════ */
+function calculateProgress() {
+    if (tasksList.length === 0) return 0;
+    const completed = tasksList.filter(t => t.status === 'done').length;
+    return Math.round((completed / tasksList.length) * 100);
+}
+
+function updateProgressIndicator() {
+    const progress = calculateProgress();
+    const fill = document.getElementById('progressFill');
+    const text = document.getElementById('progressText');
+    if (fill) fill.style.width = `${progress}%`;
+    if (text) text.textContent = `${progress}%`;
+}
+
+function renderKanban() {
+    const columns = {
+        'todo': [],
+        'in-progress': [],
+        'done': []
+    };
+    
+    // Groupby status
+    tasksList.forEach(task => {
+        const status = task.status || 'todo';
+        if (columns[status]) {
+            columns[status].push(task);
+        }
+    });
+    
+    // Render each column
+    ['todo', 'in-progress', 'done'].forEach(status => {
+        const container = document.getElementById(`kanban-${status}`);
+        const countEl = document.getElementById(`${status === 'todo' ? 'todo' : status === 'in-progress' ? 'inProgress' : 'done'}Count`);
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        const count = columns[status].length;
+        
+        if (countEl) {
+            countEl.textContent = count;
+        }
+        
+        if (count === 0) {
+            container.innerHTML = '<div class="empty-kanban-state">Sin tareas</div>';
+            return;
+        }
+        
+        columns[status].forEach(task => {
+            const item = createKanbanItem(task);
+            container.appendChild(item);
+        });
+    });
+    
+    updateProgressIndicator();
+}
+
+function createKanbanItem(task) {
+    const item = document.createElement('div');
+    item.className = 'kanban-item';
+    item.style.borderLeftColor = task.color;
+    item.draggable = true;
+    item.dataset.taskId = task.id;
+    item.dataset.status = task.status || 'todo';
+    
+    const title = document.createElement('div');
+    title.className = 'kanban-item-title';
+    title.textContent = task.name;
+    
+    const meta = document.createElement('div');
+    meta.className = 'kanban-item-meta';
+    meta.innerHTML = `<span>S${task.start}–S${task.start + task.duration - 1}</span><span>${task.duration}s</span>`;
+    
+    const action = document.createElement('div');
+    action.className = 'kanban-item-action';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'kanban-item-delete';
+    delBtn.textContent = '×';
+    delBtn.onclick = () => deleteTask(task.id);
+    action.appendChild(delBtn);
+    
+    item.appendChild(title);
+    item.appendChild(meta);
+    item.appendChild(action);
+    
+    // Drag events
+    item.addEventListener('dragstart', e => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('taskId', task.id);
+        item.classList.add('dragging');
+    });
+    
+    item.addEventListener('dragend', () => {
+        item.classList.remove('dragging');
+    });
+    
+    return item;
+}
+
+// Setup drop zones
+function setupKanbanDropZones() {
+    ['todo', 'in-progress', 'done'].forEach(status => {
+        const zone = document.getElementById(`kanban-${status}`);
+        if (!zone) return;
+        
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            zone.style.opacity = '0.7';
+        });
+        
+        zone.addEventListener('dragleave', () => {
+            zone.style.opacity = '1';
+        });
+        
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.style.opacity = '1';
+            const taskId = parseInt(e.dataTransfer.getData('taskId'));
+            const task = tasksList.find(t => t.id === taskId);
+            
+            if (task && task.status !== status) {
+                task.status = status;
+                updateTask(task);
+                renderKanban();
+            }
+        });
+    });
+}
+
+/* ════════════════════════════════════════════════════════
    CRUD
 ════════════════════════════════════════════════════════ */
 async function addTask() {
@@ -1038,12 +1388,13 @@ async function addTask() {
         const res = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, start, duration, color })
+            body: JSON.stringify({ name, start, duration, color, status: 'todo' })
         });
         if (res.ok) {
             const newTask = await res.json();
             tasksList.push(newTask);
             renderAll();
+            setupKanbanDropZones();
             document.getElementById('taskName').value  = '';
             document.getElementById('startWeek').value = '';
             document.getElementById('duration').value  = '';
